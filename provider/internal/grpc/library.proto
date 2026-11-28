@@ -12,6 +12,10 @@ package provider;
 message Capability {
   string name = 1;
   google.protobuf.Struct templateContext = 2;
+  // OpenAPI schemas of the capability's condition input and output, encoded as
+  // JSON objects. Unset when the provider does not describe them.
+  google.protobuf.Struct input = 3;
+  google.protobuf.Struct output = 4;
 }
 
 message Config {

@@ -345,9 +345,18 @@ func (g *grpcProvider) Capabilities() []provider.Capability {
 
 	c := []provider.Capability{}
 	for _, x := range r.Capabilities {
+		in, err := provider.StructToSchema(x.Input)
+		if err != nil {
+			g.log.Error(err, "unable to decode capability input schema", "capability", x.Name)
+		}
+		out, err := provider.StructToSchema(x.Output)
+		if err != nil {
+			g.log.Error(err, "unable to decode capability output schema", "capability", x.Name)
+		}
 		v := provider.Capability{
-			Name: x.Name,
-			//TemplateContext: x.TemplateContext.AsMap(),
+			Name:   x.Name,
+			Input:  in,
+			Output: out,
 		}
 		c = append(c, v)
 	}

@@ -238,8 +238,18 @@ func (s *server) Capabilities(ctx context.Context, _ *emptypb.Empty) (*libgrpc.C
 	var pbCaps []*libgrpc.Capability
 
 	for _, c := range caps {
+		in, err := SchemaToStruct(c.Input)
+		if err != nil {
+			return nil, fmt.Errorf("capability %s input schema: %w", c.Name, err)
+		}
+		out, err := SchemaToStruct(c.Output)
+		if err != nil {
+			return nil, fmt.Errorf("capability %s output schema: %w", c.Name, err)
+		}
 		pbCaps = append(pbCaps, &libgrpc.Capability{
-			Name: c.Name,
+			Name:   c.Name,
+			Input:  in,
+			Output: out,
 		})
 	}
 
